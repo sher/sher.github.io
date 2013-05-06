@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[tundrax's blog]]></title>
+  <title><![CDATA[tundrax's cookbook]]></title>
   <link href="http://tundrax.github.io/atom.xml" rel="self"/>
   <link href="http://tundrax.github.io/"/>
-  <updated>2013-05-06T11:02:04+09:00</updated>
+  <updated>2013-05-06T11:18:23+09:00</updated>
   <id>http://tundrax.github.io/</id>
   <author>
     <name><![CDATA[Sherzod Kuchkarov]]></name>
@@ -12,14 +12,5 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
-  
-  <entry>
-    <title type="html"><![CDATA[Core Data: Automated master data preloading using XCode Workspace]]></title>
-    <link href="http://tundrax.github.io/blog/2013/05/06/core-data-automated-master-data-preloading-using-xcode-workspace/"/>
-    <updated>2013-05-06T10:57:00+09:00</updated>
-    <id>http://tundrax.github.io/blog/2013/05/06/core-data-automated-master-data-preloading-using-xcode-workspace</id>
-    <content type="html"><![CDATA[
-]]></content>
-  </entry>
   
 </feed>
