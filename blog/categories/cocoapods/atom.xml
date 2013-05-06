@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: Cocoapods | Cookbook]]></title>
+  <title><![CDATA[Category: Cocoapods | The Cookbook]]></title>
   <link href="http://tundrax.github.io/blog/categories/cocoapods/atom.xml" rel="self"/>
   <link href="http://tundrax.github.io/"/>
-  <updated>2013-05-06T14:59:10+09:00</updated>
+  <updated>2013-05-07T01:08:56+09:00</updated>
   <id>http://tundrax.github.io/</id>
   <author>
-    <name><![CDATA[Sherzod Kuchkarov]]></name>
+    <name><![CDATA[Sher]]></name>
     
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
@@ -28,6 +28,11 @@
 
 <p>Use <a href="http://cocoapods.org" title="Cocoapods">Cocoapods</a> for library management in Objective-C projects.</p>
 
+<!--more-->
+
+
+<h4>Step 1</h4>
+
 <p>Install <strong>cocoapods</strong> gem and initiliaze.
 ``` bash
 $ gem install cocoapods</p>
@@ -37,6 +42,8 @@ $ gem install cocoapods</p>
 <p>$ rbenv rehash
 $ pod setup
 ```</p>
+
+<h4>Step 2</h4>
 
 <p>Create a Podfile and list dependencies.
 <code>bash
@@ -50,6 +57,8 @@ $ vim Podfile
 <p>platform :ios, '5.0'            # deployment target SDK
 pod 'AFNetworking', '~> 1.2.0'  # means we need AFNetworking version 1.2.0 or higher
 ```</p>
+
+<h4>Step 3</h4>
 
 <p>Now install dependencies.
 ``` bash

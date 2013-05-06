@@ -5,12 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Core Data: Automate master data preloading - Cookbook</title>
-  <meta name="author" content="Sherzod Kuchkarov">
+  <title>Core Data: Automate master data preloading - The Cookbook</title>
+  <meta name="author" content="Sher">
 
   
-  <meta name="description" content="
-">
+  <meta name="description" content="Problem Given a generic iOS application &#8216;Blog&#8217; with data model as below: We want to prepopulate data for &#8216;Categories&#8217; table &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -22,7 +21,7 @@
   <link rel="canonical" href="http://tundrax.github.io/blog/2013/05/06/core-data-automate-master-data-preloading">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <link href="/atom.xml" rel="alternate" title="Cookbook" type="application/atom+xml">
+  <link href="/atom.xml" rel="alternate" title="The Cookbook" type="application/atom+xml">
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
   <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
@@ -37,7 +36,7 @@
 
 <body   >
   <header role="banner"><hgroup>
-  <h1><a href="/">Cookbook</a></h1>
+  <h1><a href="/">The Cookbook</a></h1>
   
 </hgroup>
 
@@ -90,7 +89,272 @@
   </header>
 
 
-<div class="entry-content">
+<div class="entry-content"><h3 class="problem">Problem</h3>
+
+
+<p>Given a generic iOS application &#8216;Blog&#8217; with data model as below:</p>
+
+<p><img class="screenshot" src="/images/blog-data-model.png"></p>
+
+<p>We want to prepopulate data for &#8216;Categories&#8217; table in our SQLite database.</p>
+
+<h3 class="solution">Solution</h3>
+
+
+<p class="notice">This solution uses the approach described in <a href="http://www.raywenderlich.com/12170/core-data-tutorial-how-to-preloadimport-existing-data-updated">Core Data on iOS 5 Tutorial: How To Preload and Import Existing Data</a>, we will create an OS X Command Line Tool application, which will reference the data model in our &#8216;Blog&#8217; application and prepopulate the data. Except we automate the building process.</p>
+
+
+
+
+<!--more-->
+
+
+<h3>Step 1</h3>
+
+<p>Make sure you are using <strong>XCode Workspace</strong> with your project and skip to <strong>Step 2</strong>. If not, follow the steps below to create a new workspace:</p>
+
+<ol>
+<li>Open your project in XCode</li>
+<li>Goto File > New > Workspace&#8230; or use the shortcut Command + Control + N</li>
+<li>Name the <strong>new workspace</strong> the same as your project and save it in your project folder.</li>
+<li><img class="screenshot" src="/images/blog-create-workspace.png"></li>
+<li>Quit XCode</li>
+<li>Open the Workspace <code>$ open Blog.xcworkspace</code></li>
+<li>Drag your project from Finder to the Workspace</li>
+<li><img class="screenshot" src="/images/blog-drag-project-to-workspace.png"></li>
+<li>We have successfully added your project into a workspace.</li>
+</ol>
+
+
+<h3>Step 2</h3>
+
+<ol>
+<li>While your workspace is open create a new project by selecting <strong>File > New > Project</strong></li>
+<li>From the prompt window select <strong>OS X > Application > Command Line Tool</strong> and click <strong>Next</strong></li>
+<li><img class="screenshot" src="/images/blog-create-commandline-app.png"></li>
+<li>In the next window enter <strong>MasterDataLoader</strong> for the <strong>Product Name</strong>, select <strong>Core Data</strong> in the <strong>Type</strong> pulldown and click <strong>Next</strong></li>
+<li><img class="screenshot" src="/images/blog-commandline-app-name.png"></li>
+<li>In the next window select the folder where your workspace is stored, select your workspace for <strong>Add to</strong> and <strong>Group</strong> pulldowns. Click <strong>Create</strong>.</li>
+<li><img class="screenshot" src="/images/blog-commandline-app-save.png"></li>
+<li>Now you have two applications in your workspace</li>
+<li><img class="screenshot" src="/images/blog-commandline-app-created.png"></li>
+<li>Remove the <strong>MasterDataLoader.xcdatamodeld</strong> file from the <strong>MasterDataLoader</strong> application and <strong>Move to Trash</strong></li>
+<li>Open the <code>main.m</code> file in the <strong>MasterDataLoader</strong> application</li>
+<li>Change the lines in <code>managedObjectModel()</code> and <code>managedObjectContext()</code> methods from</li>
+</ol>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="n">NSString</span> <span class="o">*</span><span class="n">path</span> <span class="o">=</span> <span class="s">@&quot;MasterDataLoader&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="n">path</span> <span class="o">=</span> <span class="p">[</span><span class="n">path</span> <span class="n">stringByDeletingPathExtension</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="n">NSString</span> <span class="o">*</span><span class="n">path</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSProcessInfo</span> <span class="n">processInfo</span><span class="p">]</span> <span class="n">arguments</span><span class="p">][</span><span class="mi">0</span><span class="p">];</span>
+</span><span class='line'><span class="n">path</span> <span class="o">=</span> <span class="p">[</span><span class="n">path</span> <span class="n">stringByDeletingPathExtension</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>to</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="n">NSString</span> <span class="o">*</span><span class="n">path</span> <span class="o">=</span> <span class="s">@&quot;Blog&quot;</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now run <strong>MasterDataLoader</strong> application.</p>
+
+<br />
+
+
+<p><img class="screenshot" src="/images/blog-commandline-app-run.png"></p>
+
+<p>You should get an error <code>Cannot create an NSPersistentStoreCoordinator with a nil model</code>.
+Now we made sure our command line app runs and can&#8217;t find a compiled data model object. Great!</p>
+
+<h3>Step 3</h3>
+
+<p>Add a new <strong>Run Script</strong> build phase to your &#8216;Blog&#8217; application, name it <strong>Run MasterDataLoader</strong> and drag it under <strong>Compile Sources</strong> phase.
+<img class="screenshot" src="/images/blog-create-runscript.png">
+<img class="screenshot" src="/images/blog-runscript-drag.png"></p>
+
+<p>Now paste this code in the <strong>run script</strong> you just created and save.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">echo</span> <span class="s2">&quot;Copying momd to MasterDataLoader folder&quot;</span>
+</span><span class='line'>cp -R <span class="k">${</span><span class="nv">BUILT_PRODUCTS_DIR</span><span class="k">}</span>/<span class="k">${</span><span class="nv">TARGET_NAME</span><span class="k">}</span>.app/<span class="k">${</span><span class="nv">TARGET_NAME</span><span class="k">}</span>.momd <span class="k">${</span><span class="nv">BUILT_PRODUCTS_DIR</span><span class="k">}</span>/../Debug/
+</span><span class='line'><span class="nb">cd</span> <span class="k">${</span><span class="nv">BUILT_PRODUCTS_DIR</span><span class="k">}</span>/../Debug/
+</span><span class='line'><span class="nb">echo</span> <span class="s2">&quot;Running MasterDataLoader&quot;</span>
+</span><span class='line'>./MasterDataLoader
+</span><span class='line'><span class="nb">echo</span> <span class="s2">&quot;Moving ${TARGET_NAME}.sqlite&quot;</span>
+</span><span class='line'>mv ./<span class="k">${</span><span class="nv">TARGET_NAME</span><span class="k">}</span>.sqlite <span class="k">${</span><span class="nv">BUILT_PRODUCTS_DIR</span><span class="k">}</span>/<span class="k">${</span><span class="nv">TARGET_NAME</span><span class="k">}</span>.app/
+</span><span class='line'><span class="nb">echo</span> <span class="s2">&quot;MasterDataLoder finished.&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><img class="screenshot" src="/images/blog-runscript-edit.png"></p>
+
+<p>Edit the scheme for &#8216;Blog&#8217; application. Add <strong>MasterDataLoader</strong> in build targets.
+<img class="screenshot" src="/images/blog-scheme-edit.png"></p>
+
+<p>This step makes sure that <strong>MasterDataLoader</strong> is build before the &#8216;Blog&#8217; app.</p>
+
+<h3>Step 4</h3>
+
+<p>Open <code>AppDelegate.m</code> in the &#8216;Blog&#8217; application and add the following code</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">[[</span><span class="n">NSFileManager</span> <span class="n">defaultManager</span><span class="p">]</span> <span class="nl">fileExistsAtPath:</span><span class="p">[</span><span class="n">storeURL</span> <span class="n">path</span><span class="p">]])</span> <span class="p">{</span>
+</span><span class='line'>  <span class="n">NSURL</span> <span class="o">*</span><span class="n">preloadURL</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSURL</span> <span class="nl">fileURLWithPath:</span><span class="p">[[</span><span class="n">NSBundle</span> <span class="n">mainBundle</span><span class="p">]</span> <span class="nl">pathForResource:</span><span class="s">@&quot;Blog&quot;</span> <span class="nl">ofType:</span><span class="s">@&quot;sqlite&quot;</span><span class="p">]];</span>
+</span><span class='line'>  <span class="n">NSError</span><span class="o">*</span> <span class="n">err</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">[[</span><span class="n">NSFileManager</span> <span class="n">defaultManager</span><span class="p">]</span> <span class="nl">copyItemAtURL:</span><span class="n">preloadURL</span> <span class="nl">toURL:</span><span class="n">storeURL</span> <span class="nl">error:</span><span class="o">&amp;</span><span class="n">err</span><span class="p">])</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;Oops, could copy preloaded data&quot;</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>under the line</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="n">NSURL</span> <span class="o">*</span><span class="n">storeURL</span> <span class="o">=</span> <span class="p">[[</span><span class="n">self</span> <span class="n">applicationDocumentsDirectory</span><span class="p">]</span> <span class="nl">URLByAppendingPathComponent:</span><span class="s">@&quot;Blog.sqlite&quot;</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>As you can see, here we check if the SQLite database already exists. If not, we copy the one which is in the main bundle to the &#8216;Documents&#8217; folder.</p>
+
+<p>Right now our SQLite datamase is empty. Let&#8217;s fetch &#8216;Categories&#8217; and check if the table is empty.
+Add the following code to the <code>application:didFinishLaunchingWithOptions:</code> method just before <code>return YES</code> line.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="n">NSFetchRequest</span> <span class="o">*</span><span class="n">request</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSFetchRequest</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'><span class="n">NSEntityDescription</span> <span class="o">*</span><span class="n">entity</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSEntityDescription</span> <span class="nl">entityForName:</span><span class="s">@&quot;Category&quot;</span> <span class="nl">inManagedObjectContext:</span><span class="n">self</span><span class="p">.</span><span class="n">managedObjectContext</span><span class="p">];</span>
+</span><span class='line'><span class="p">[</span><span class="n">request</span> <span class="nl">setEntity:</span><span class="n">entity</span><span class="p">];</span>
+</span><span class='line'><span class="n">NSError</span> <span class="o">*</span><span class="n">error</span> <span class="o">=</span>  <span class="nb">nil</span><span class="p">;</span>
+</span><span class='line'><span class="n">NSArray</span> <span class="o">*</span><span class="n">cats</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">managedObjectContext</span> <span class="nl">executeFetchRequest:</span><span class="n">request</span> <span class="nl">error:</span><span class="o">&amp;</span><span class="n">error</span><span class="p">];</span>
+</span><span class='line'><span class="k">for</span> <span class="p">(</span><span class="n">Category</span> <span class="o">*</span><span class="n">cat</span> <span class="k">in</span> <span class="n">cats</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;cat: %@&quot;</span><span class="p">,</span> <span class="n">cat</span><span class="p">.</span><span class="n">name</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Don&#8217;t forget to import <code>Category.h</code></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="cp">#import &quot;Category.h&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Run the &#8216;Blog&#8217; application. The console should print nothing.
+<img class="screenshot" src="/images/blog-run.png"></p>
+
+<h3>Step 5</h3>
+
+<p>Lets add some <code>Categories</code>.
+Drag the <code>Category.h</code> file from &#8216;Blog&#8217; application to <strong>MasterDataLoader</strong> application.</p>
+
+<p><img class="screenshot" src="/images/blog-drag-category.png"></p>
+
+<p>Open the <code>main.m</code> file. Import <code>Category.h</code>.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="cp">#import &quot;Category.h&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Replace the code in <code>main()</code> method</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="c1">// Custom code here...</span>
+</span><span class='line'><span class="c1">// Save the managed object context</span>
+</span><span class='line'><span class="n">NSError</span> <span class="o">*</span><span class="n">error</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
+</span><span class='line'><span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">[</span><span class="n">context</span> <span class="nl">save:</span><span class="o">&amp;</span><span class="n">error</span><span class="p">])</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;Error while saving %@&quot;</span><span class="p">,</span> <span class="p">([</span><span class="n">error</span> <span class="n">localizedDescription</span><span class="p">]</span> <span class="o">!=</span> <span class="nb">nil</span><span class="p">)</span> <span class="o">?</span> <span class="p">[</span><span class="n">error</span> <span class="n">localizedDescription</span><span class="p">]</span> <span class="o">:</span> <span class="s">@&quot;Unknown Error&quot;</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>with</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="n">NSArray</span> <span class="o">*</span><span class="n">categories</span> <span class="o">=</span> <span class="err">@</span><span class="p">[</span><span class="s">@&quot;objective-c&quot;</span><span class="p">,</span> <span class="s">@&quot;ruby&quot;</span><span class="p">,</span> <span class="s">@&quot;python&quot;</span><span class="p">];</span>
+</span><span class='line'><span class="k">for</span> <span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="n">name</span> <span class="k">in</span> <span class="n">categories</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">Category</span> <span class="o">*</span><span class="n">cat</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSEntityDescription</span> <span class="nl">insertNewObjectForEntityForName:</span><span class="s">@&quot;Category&quot;</span> <span class="nl">inManagedObjectContext:</span><span class="n">managedObjectContext</span><span class="p">()];</span>
+</span><span class='line'>    <span class="n">cat</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">[</span><span class="n">context</span> <span class="nl">save:</span><span class="o">&amp;</span><span class="n">error</span><span class="p">])</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;Error while saving %@&quot;</span><span class="p">,</span> <span class="p">([</span><span class="n">error</span> <span class="n">localizedDescription</span><span class="p">]</span> <span class="o">!=</span> <span class="nb">nil</span><span class="p">)</span> <span class="o">?</span> <span class="p">[</span><span class="n">error</span> <span class="n">localizedDescription</span><span class="p">]</span> <span class="o">:</span> <span class="s">@&quot;Unknown Error&quot;</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Before running</h3>
+
+<p>Delete &#8216;Blog&#8217; application from the simulator.</p>
+
+<h3>Run</h3>
+
+<p>Run the &#8216;Blog&#8217; application.</p>
+
+<br /><img class="screenshot" src="/images/blog-run.png">
+
+
+<p>The console should print three categories:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>2013-05-07 01:00:13.911 Blog<span class="o">[</span>61827:c07<span class="o">]</span> cat: objective-c
+</span><span class='line'>2013-05-07 01:00:13.913 Blog<span class="o">[</span>61827:c07<span class="o">]</span> cat: ruby
+</span><span class='line'>2013-05-07 01:00:13.913 Blog<span class="o">[</span>61827:c07<span class="o">]</span> cat: python
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<h3 class="discussion">Discussion</h3>
+
+
+<p>This way you can reference any managed object from <strong>MasterDataLoader</strong> app and preload the data.</p>
 </div>
 
 
@@ -99,7 +363,7 @@
       
   
 
-<span class="byline author vcard">Posted by <span class="fn">Sherzod Kuchkarov</span></span>
+<span class="byline author vcard">Posted by <span class="fn">Sher</span></span>
 
       
 
@@ -115,6 +379,12 @@
 
 <time datetime="2013-05-06T14:39:00+09:00" pubdate data-updated="true">May 6<span>th</span>, 2013</time>
       
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/core-data/'>Core Data</a>, <a class='category' href='/blog/categories/objective-c/'>Objective-C</a>, <a class='category' href='/blog/categories/xcode/'>XCode</a>
+  
+</span>
 
 
     </p>
@@ -173,7 +443,7 @@
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2013 - Sherzod Kuchkarov -
+  Copyright &copy; 2013 - Sher -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: Objective-C | The Cookbook]]></title>
-  <link href="http://tundrax.github.io/blog/categories/objective-c/atom.xml" rel="self"/>
+  <title><![CDATA[Category: Core Data | The Cookbook]]></title>
+  <link href="http://tundrax.github.io/blog/categories/core-data/atom.xml" rel="self"/>
   <link href="http://tundrax.github.io/"/>
   <updated>2013-05-07T01:08:56+09:00</updated>
   <id>http://tundrax.github.io/</id>
@@ -225,82 +225,6 @@ if (![context save:&amp;error]) {
 
 
 <p>This way you can reference any managed object from <strong>MasterDataLoader</strong> app and preload the data.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[XCode development using Cocoapods]]></title>
-    <link href="http://tundrax.github.io/blog/2013/05/06/xcode-development-using-cocoapods/"/>
-    <updated>2013-05-06T12:48:00+09:00</updated>
-    <id>http://tundrax.github.io/blog/2013/05/06/xcode-development-using-cocoapods</id>
-    <content type="html"><![CDATA[<h3 class="problem">Problem</h3>
-
-
-<p>Manage 3rd party libraries in Objective-C projects.</p>
-
-<h3 class="solution">Solution</h3>
-
-
-<p>Use <a href="http://cocoapods.org" title="Cocoapods">Cocoapods</a> for library management in Objective-C projects.</p>
-
-<!--more-->
-
-
-<h4>Step 1</h4>
-
-<p>Install <strong>cocoapods</strong> gem and initiliaze.
-``` bash
-$ gem install cocoapods</p>
-
-<h1>If you are using rbenv don't forget to rehash</h1>
-
-<p>$ rbenv rehash
-$ pod setup
-```</p>
-
-<h4>Step 2</h4>
-
-<p>Create a Podfile and list dependencies.
-<code>bash
-$ cd ~/foo    # your xcode project root folder
-$ vim Podfile
-</code>
-```ruby</p>
-
-<h1>~/foo/Podfile</h1>
-
-<p>platform :ios, '5.0'            # deployment target SDK
-pod 'AFNetworking', '~> 1.2.0'  # means we need AFNetworking version 1.2.0 or higher
-```</p>
-
-<h4>Step 3</h4>
-
-<p>Now install dependencies.
-``` bash
-$ pod install
-Analyzing dependencies
-Downloading dependencies
-Installing AFNetworking (1.2.1)
-Generating Pods project
-Integrating client project</p>
-
-<p>[!] From now on use <code>foo.xcworkspace</code>.
-```
-Cocoapods creates an XCode workspace and <strong>Pods</strong> static library project, then links it with you project.
-All your dependencies will be available through that library. As the output suggests, you will use <strong>foo.xcworspace</strong> from now on.</p>
-
-<p><code>bash
-$ open foo.xcworkspace
-</code></p>
-
-<h3 class="discussion">Discussion</h3>
-
-
-<p>Cocoapods certainly makes it easier to manage libraries in your project. You can search the library you want to use.
-<code>bash
-$ pod search TestFlightSDK
-</code>
-As well as XCode <strong>workspaces</strong> have some advantages described in <a href="http://developer.apple.com/library/ios/#featuredarticles/XcodeConcepts/Concept-Workspace.html" title="Xcode Concepts">Xcode Concepts</a> which we discuss in <a href="/blog/2013/05/06/core-data-automate-master-data-preloading/" title="Core Data: Automate master data preloading&quot;">Core Data: Automate master data preloading</a>.</p>
 ]]></content>
   </entry>
   
