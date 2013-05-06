@@ -4,7 +4,7 @@
   <title><![CDATA[Cookbook]]></title>
   <link href="http://tundrax.github.io/atom.xml" rel="self"/>
   <link href="http://tundrax.github.io/"/>
-  <updated>2013-05-06T12:22:25+09:00</updated>
+  <updated>2013-05-06T14:59:10+09:00</updated>
   <id>http://tundrax.github.io/</id>
   <author>
     <name><![CDATA[Sherzod Kuchkarov]]></name>
@@ -14,11 +14,102 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Core Data: Automated master data preloading using XCode Workspace]]></title>
-    <link href="http://tundrax.github.io/blog/2013/05/06/core-data-automated-master-data-preloading-using-xcode-workspace/"/>
-    <updated>2013-05-06T12:18:00+09:00</updated>
-    <id>http://tundrax.github.io/blog/2013/05/06/core-data-automated-master-data-preloading-using-xcode-workspace</id>
-    <content type="html"><![CDATA[<h3>Problem</h3>
+    <title type="html"><![CDATA[Core Data: Automate master data preloading]]></title>
+    <link href="http://tundrax.github.io/blog/2013/05/06/core-data-automate-master-data-preloading/"/>
+    <updated>2013-05-06T14:39:00+09:00</updated>
+    <id>http://tundrax.github.io/blog/2013/05/06/core-data-automate-master-data-preloading</id>
+    <content type="html"><![CDATA[
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[XCode development using Cocoapods]]></title>
+    <link href="http://tundrax.github.io/blog/2013/05/06/xcode-development-using-cocoapods/"/>
+    <updated>2013-05-06T12:48:00+09:00</updated>
+    <id>http://tundrax.github.io/blog/2013/05/06/xcode-development-using-cocoapods</id>
+    <content type="html"><![CDATA[<h3 class="problem">Problem</h3>
+
+
+<p>Manage 3rd party libraries in Objective-C projects.</p>
+
+<h3 class="solution">Solution</h3>
+
+
+<p>Use <a href="http://cocoapods.org" title="Cocoapods">Cocoapods</a> for library management in Objective-C projects.</p>
+
+<p>Install <strong>cocoapods</strong> gem and initiliaze.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>gem install cocoapods
+</span><span class='line'><span class="c"># If you are using rbenv don&#39;t forget to rehash</span>
+</span><span class='line'><span class="nv">$ </span>rbenv rehash
+</span><span class='line'><span class="nv">$ </span>pod setup
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Create a Podfile and list dependencies.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span><span class="nb">cd</span> ~/foo    <span class="c"># your xcode project root folder</span>
+</span><span class='line'><span class="nv">$ </span>vim Podfile
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># ~/foo/Podfile</span>
+</span><span class='line'><span class="n">platform</span> <span class="ss">:ios</span><span class="p">,</span> <span class="s1">&#39;5.0&#39;</span>            <span class="c1"># deployment target SDK</span>
+</span><span class='line'><span class="n">pod</span> <span class="s1">&#39;AFNetworking&#39;</span><span class="p">,</span> <span class="s1">&#39;~&gt; 1.2.0&#39;</span>  <span class="c1"># means we need AFNetworking version 1.2.0 or higher</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now install dependencies.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>pod install
+</span><span class='line'>Analyzing dependencies
+</span><span class='line'>Downloading dependencies
+</span><span class='line'>Installing AFNetworking <span class="o">(</span>1.2.1<span class="o">)</span>
+</span><span class='line'>Generating Pods project
+</span><span class='line'>Integrating client project
+</span><span class='line'>
+</span><span class='line'><span class="o">[</span>!<span class="o">]</span> From now on use <span class="sb">`</span>foo.xcworkspace<span class="sb">`</span>.
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Cocoapods creates an XCode workspace and <strong>Pods</strong> static library project, then links it with you project.
+All your dependencies will be available through that library. As the output suggests, you will use <strong>foo.xcworspace</strong> from now on.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>open foo.xcworkspace
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<h3 class="discussion">Discussion</h3>
+
+
+<p>Cocoapods certainly makes it easier to manage libraries in your project. You can search the library you want to use.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>pod search TestFlightSDK
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>As well as XCode <strong>workspaces</strong> have some advantages described in <a href="http://developer.apple.com/library/ios/#featuredarticles/XcodeConcepts/Concept-Workspace.html" title="Xcode Concepts">Xcode Concepts</a> which we discuss in <a href="http://tundrax.github.io/blog/2013/05/06/core-data-automate-master-data-preloading/" title="Core Data: Automate master data preloading&quot;">Core Data: Automate master data preloading</a>.</p>
 ]]></content>
   </entry>
   
