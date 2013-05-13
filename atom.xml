@@ -4,7 +4,7 @@
   <title><![CDATA[The Cookbook]]></title>
   <link href="http://tundrax.github.io/atom.xml" rel="self"/>
   <link href="http://tundrax.github.io/"/>
-  <updated>2013-05-13T14:08:08+09:00</updated>
+  <updated>2013-05-13T14:08:46+09:00</updated>
   <id>http://tundrax.github.io/</id>
   <author>
     <name><![CDATA[Sher]]></name>
@@ -288,7 +288,7 @@ Drag the <code>Category.h</code> file from &#8216;Blog&#8217; application to <st
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[XCode development using Cocoapods]]></title>
+    <title type="html"><![CDATA[Xcode development using Cocoapods]]></title>
     <link href="http://tundrax.github.io/blog/2013/05/06/xcode-development-using-cocoapods/"/>
     <updated>2013-05-06T12:48:00+09:00</updated>
     <id>http://tundrax.github.io/blog/2013/05/06/xcode-development-using-cocoapods</id>
@@ -363,7 +363,7 @@ Drag the <code>Category.h</code> file from &#8216;Blog&#8217; application to <st
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Cocoapods creates an XCode workspace and <strong>Pods</strong> static library project, then links it with you project.
+<p>Cocoapods creates an Xcode workspace and <strong>Pods</strong> static library project, then links it with you project.
 All your dependencies will be available through that library. As the output suggests, you will use <strong>foo.xcworspace</strong> from now on.</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -383,7 +383,7 @@ All your dependencies will be available through that library. As the output sugg
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>As well as XCode <strong>workspaces</strong> have some advantages described in <a href="http://developer.apple.com/library/ios/#featuredarticles/XcodeConcepts/Concept-Workspace.html" title="Xcode Concepts">Xcode Concepts</a> which we discuss in <a href="http://tundrax.github.io/blog/2013/05/06/core-data-automate-master-data-preloading/" title="Core Data: Automate master data preloading&quot;">Core Data: Automate master data preloading</a>.</p>
+<p>As well as Xcode <strong>workspaces</strong> have some advantages described in <a href="http://developer.apple.com/library/ios/#featuredarticles/XcodeConcepts/Concept-Workspace.html" title="Xcode Concepts">Xcode Concepts</a> which we discuss in <a href="http://tundrax.github.io/blog/2013/05/06/core-data-automate-master-data-preloading/" title="Core Data: Automate master data preloading&quot;">Core Data: Automate master data preloading</a>.</p>
 ]]></content>
   </entry>
   
