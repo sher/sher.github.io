@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Objective-C | The Cookbook]]></title>
   <link href="http://tundrax.github.io/blog/categories/objective-c/atom.xml" rel="self"/>
   <link href="http://tundrax.github.io/"/>
-  <updated>2013-05-13T14:08:46+09:00</updated>
+  <updated>2013-05-14T17:23:32+09:00</updated>
   <id>http://tundrax.github.io/</id>
   <author>
     <name><![CDATA[Sher]]></name>
@@ -104,8 +104,8 @@ Now we made sure our command line app runs and can't find a compiled data model 
 <p>Now paste this code in the <strong>run script</strong> you just created and save.
 <code>bash
 echo "Copying momd to MasterDataLoader folder"
-cp -R ${BUILT_PRODUCTS_DIR}/${TARGET_NAME}.app/${TARGET_NAME}.momd ${BUILT_PRODUCTS_DIR}/../Debug/
-cd ${BUILT_PRODUCTS_DIR}/../Debug/
+cp -R ${BUILT_PRODUCTS_DIR}/${TARGET_NAME}.app/${TARGET_NAME}.momd ${BUILT_PRODUCTS_DIR}/../${CONFIGURATION}/
+cd ${BUILT_PRODUCTS_DIR}/../${CONFIGURATINO}/
 echo "Running MasterDataLoader"
 ./MasterDataLoader
 echo "Moving ${TARGET_NAME}.sqlite"

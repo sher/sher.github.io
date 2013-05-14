@@ -4,7 +4,7 @@
   <title><![CDATA[The Cookbook]]></title>
   <link href="http://tundrax.github.io/atom.xml" rel="self"/>
   <link href="http://tundrax.github.io/"/>
-  <updated>2013-05-13T14:08:46+09:00</updated>
+  <updated>2013-05-14T17:23:32+09:00</updated>
   <id>http://tundrax.github.io/</id>
   <author>
     <name><![CDATA[Sher]]></name>
@@ -121,8 +121,8 @@ Now we made sure our command line app runs and can&#8217;t find a compiled data 
 <span class='line-number'>7</span>
 <span class='line-number'>8</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">echo</span> <span class="s2">&quot;Copying momd to MasterDataLoader folder&quot;</span>
-</span><span class='line'>cp -R <span class="k">${</span><span class="nv">BUILT_PRODUCTS_DIR</span><span class="k">}</span>/<span class="k">${</span><span class="nv">TARGET_NAME</span><span class="k">}</span>.app/<span class="k">${</span><span class="nv">TARGET_NAME</span><span class="k">}</span>.momd <span class="k">${</span><span class="nv">BUILT_PRODUCTS_DIR</span><span class="k">}</span>/../Debug/
-</span><span class='line'><span class="nb">cd</span> <span class="k">${</span><span class="nv">BUILT_PRODUCTS_DIR</span><span class="k">}</span>/../Debug/
+</span><span class='line'>cp -R <span class="k">${</span><span class="nv">BUILT_PRODUCTS_DIR</span><span class="k">}</span>/<span class="k">${</span><span class="nv">TARGET_NAME</span><span class="k">}</span>.app/<span class="k">${</span><span class="nv">TARGET_NAME</span><span class="k">}</span>.momd <span class="k">${</span><span class="nv">BUILT_PRODUCTS_DIR</span><span class="k">}</span>/../<span class="k">${</span><span class="nv">CONFIGURATION</span><span class="k">}</span>/
+</span><span class='line'><span class="nb">cd</span> <span class="k">${</span><span class="nv">BUILT_PRODUCTS_DIR</span><span class="k">}</span>/../<span class="k">${</span><span class="nv">CONFIGURATINO</span><span class="k">}</span>/
 </span><span class='line'><span class="nb">echo</span> <span class="s2">&quot;Running MasterDataLoader&quot;</span>
 </span><span class='line'>./MasterDataLoader
 </span><span class='line'><span class="nb">echo</span> <span class="s2">&quot;Moving ${TARGET_NAME}.sqlite&quot;</span>
