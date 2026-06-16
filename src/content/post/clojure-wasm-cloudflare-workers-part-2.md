@@ -118,17 +118,22 @@ curl https://clj-wasm-worker.oddiy.workers.dev
 
 It is live.
 
-## Numbers
+## Measurements
 
-| Metric | Value |
-|--------|-------|
-| WASM binary (raw) | 5.3MB |
-| Total upload (gzip) | 2.52MB |
-| CF Workers free tier limit | 3MB gzip |
-| Build time | ~14s |
-| Cold start (observed) | ~200ms |
+I measured against a plain JS worker returning the same response, using `hey` with 200 requests at 20 concurrency.
 
-The free tier limit is 3MB compressed. We are at 2.52MB — with a hello-world program. A real application with more Clojure code will be larger.
+| Metric | JS | Clojure WASM |
+|--------|----|--------------|
+| Bundle (gzip) | 0.21 KB | 2,520 KB |
+| p50 latency | 27ms | 67ms |
+| p90 latency | 82ms | 117ms |
+| p99 latency | 75ms | 349ms |
+| Avg (warm) | 34ms | 85ms |
+| Build time | — | ~14s |
+
+The warm p50 is about 2.5× slower. The p99 spike (349ms) is probably the GraalVM WASM runtime booting on a fresh isolate — each time CF Workers spins up a new instance, the Clojure VM has to initialize.
+
+Bundle size is the bigger concern. At 2.52MB gzipped the hello-world fits inside the free tier (3MB). Any real application will likely push past it.
 
 ## What does not work yet
 

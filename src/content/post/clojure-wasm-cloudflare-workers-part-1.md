@@ -13,6 +13,16 @@ Cloudflare Workers runs V8 isolates: JavaScript and WASM only. No JVM. ClojureSc
 
 The answer turned out to be yes.
 
+## Prior art
+
+I searched but could not find a documented example of JVM Clojure running on CF Workers. The closest thing I found:
+
+- [graal-clojure-wasm](https://github.com/roman01la/graal-clojure-wasm) by roman01la — demonstrates Clojure → WASM compilation with GraalVM 25, targeting Node.js. No CF Workers.
+- ClojureScript on CF Workers has examples, but ClojureScript compiles to JavaScript, not WASM.
+- JVM languages on CF Workers in general seem unexplored. Kotlin and Scala users have asked about it but I found no working examples.
+
+If you have seen this done elsewhere, I would like to know.
+
 ## The path
 
 GraalVM 25 ships an experimental feature called **Web Image** (`--tool:svm-wasm`). It takes a JVM application and compiles it to WebAssembly using the same AOT pipeline as GraalVM native-image, but targeting WASM instead of a native binary.
