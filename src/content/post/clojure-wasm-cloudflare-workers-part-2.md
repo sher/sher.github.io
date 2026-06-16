@@ -135,6 +135,19 @@ The warm p50 is about 2.5× slower. The p99 spike (349ms) is probably the GraalV
 
 Bundle size is the bigger concern. At 2.52MB gzipped the hello-world fits inside the free tier (3MB). Any real application will likely push past it.
 
+## Is this actually useful?
+
+Probably not for most use cases. The constraints are real:
+
+- No filesystem, no threads, no network I/O inside the WASM sandbox
+- The JVM libraries that make Clojure productive on the server — Ring, http-kit, JDBC — do not work at the edge
+- Bundle size will grow quickly once you add real code
+- ClojureScript or Squint give you a similar developer experience at a fraction of the size and without the WASM overhead
+
+The one case where it could make sense: **shared pure logic between a JVM backend and the edge**. If you have validation rules, pricing calculations, or document transformation already written in Clojure, you could compile that same namespace to WASM and run it at the edge without rewriting it. One codebase, two deployment targets.
+
+Beyond that, the value is mostly technical curiosity — which is a fine reason on its own.
+
 ## What does not work yet
 
 The `-main` function runs but there is no way to call individual Clojure functions from the request handler yet. The GraalVM Web Image API has annotations for exporting functions to JavaScript — that is the next step to explore.
