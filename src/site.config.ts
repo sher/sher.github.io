@@ -2,7 +2,6 @@ import type { AstroExpressiveCodeOptions } from "astro-expressive-code";
 import type { SiteConfig } from "@/types";
 
 export const siteConfig: SiteConfig = {
-	// ! Please remember to replace the following site property with your own domain, used in astro.config.ts
 	url: "https://sher.github.io",
 	/*
 		- Used to construct the meta title property found in src/components/BaseHead.astro L:11
