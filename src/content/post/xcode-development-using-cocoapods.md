@@ -19,7 +19,7 @@ Install **cocoapods** gem and initialize.
 
 ```bash
 $ gem install cocoapods
-# If you are using rbenv don't forget to rehash
+# If you are using rbenv do not forget to rehash
 $ rbenv rehash
 $ pod setup
 ```
@@ -64,12 +64,10 @@ $ open foo.xcworkspace
 
 ### Discussion
 
-Cocoapods makes it easier to manage libraries in your project. You can search for a library:
+Cocoapods certainly makes it easier to manage libraries in your project. You can search the library you want to use.
 
 ```bash
 $ pod search TestFlightSDK
 ```
 
-Xcode **workspaces** have advantages described in
-[Xcode Concepts](http://developer.apple.com/library/ios/#featuredarticles/XcodeConcepts/Concept-Workspace.html "Xcode Concepts"),
-discussed further in [Core Data: Automate master data preloading](/posts/core-data-automate-master-data-preloading/).
+As well as Xcode **workspaces** have some advantages described in [Xcode Concepts](http://developer.apple.com/library/ios/#featuredarticles/XcodeConcepts/Concept-Workspace.html "Xcode Concepts") which we discuss in [Core Data: Automate master data preloading](/posts/core-data-automate-master-data-preloading/).

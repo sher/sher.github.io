@@ -1,20 +1,20 @@
 ---
 title: "Clojure on CF Workers via WASM, Part 2: Deploying"
-description: "Two patches to the GraalVM JS glue and a static WASM import — Clojure WASM now runs live on Cloudflare Workers."
+description: "Three patches to the GraalVM JS glue and Clojure WASM runs live on Cloudflare Workers."
 publishDate: 2026-06-16
 tags: ["clojure", "wasm", "cloudflare-workers"]
 ---
 
-In [Part 1](/posts/clojure-wasm-cloudflare-workers-part-1/) we compiled a Clojure program to WASM using GraalVM Web Image and verified it runs in Node.js. This part gets it running on Cloudflare Workers.
+In [Part 1](/posts/clojure-wasm-cloudflare-workers-part-1/) I compiled Clojure to WASM using GraalVM Web Image and ran it in Node.js. Now let us get it into Cloudflare Workers.
 
 ## What GraalVM Web Image produces
 
-The compiler outputs two files:
+Two files:
 
-- `app.js.wasm` — the WASM binary (5.3MB raw, 2.44MB gzipped)
-- `app.js` — a 92KB JS runtime/glue layer that loads the WASM, sets up imports, and starts the VM
+- `app.js.wasm` - the WASM binary, 5.3MB raw, 2.44MB gzipped
+- `app.js` - 92KB JS runtime that loads the WASM, sets up imports, and starts the VM
 
-The JS glue is designed for Node.js and SpiderMonkey. CF Workers is neither. Three things needed fixing.
+The JS glue was written for Node.js and SpiderMonkey. CF Workers is neither. Three things needed fixing.
 
 ## Fix 1: WASM loading
 
@@ -36,7 +36,7 @@ async function wasmInstantiate(config, args) {
 }
 ```
 
-No filesystem in CF Workers. Patch it to accept a pre-compiled `WebAssembly.Module`:
+There is no filesystem in CF Workers. I patched it to accept a pre-compiled `WebAssembly.Module` directly:
 
 ```js
 async function wasmInstantiate(config, args) {
@@ -47,24 +47,24 @@ async function wasmInstantiate(config, args) {
             memory: instance.exports.memory,
         };
     }
-    // original path-based loading below ...
+    // original path loading below...
 }
 ```
 
 ## Fix 2: Remove auto-run
 
-At the bottom of the generated JS, the runtime immediately runs the Clojure main method:
+At the bottom of the generated JS file there is this:
 
 ```js
 const config = new GraalVM.Config();
 GraalVM.run(load_cmd_args(), config).catch(console.error);
 ```
 
-This runs at module import time in CF Workers — before we have a chance to pass our WASM module. Remove it.
+This runs when the module is imported in CF Workers. At that point we have not passed the WASM module yet. Remove it.
 
-## Fix 3: Add ES module export
+## Fix 3: ES module export
 
-The glue uses `var GraalVM = {}` in global scope but does not export it. Add at the end:
+The glue uses `var GraalVM = {}` but does not export it. Add at the end:
 
 ```js
 export { GraalVM };
@@ -73,7 +73,6 @@ export { GraalVM };
 ## The worker
 
 ```js
-// index.js
 import { GraalVM } from './graalvm-runtime.js';
 import appWasm from './app.wasm';
 
@@ -93,15 +92,7 @@ export default {
 };
 ```
 
-## wrangler.toml
-
-```toml
-name = "clj-wasm-worker"
-main = "index.js"
-compatibility_date = "2025-07-18"
-```
-
-No `[wasm_modules]` — that is for the Service Worker format. Static import handles it in modules format.
+Note: no `[wasm_modules]` in wrangler.toml. That is for the Service Worker format. Static import handles it in modules format.
 
 ## Deploy
 
@@ -116,38 +107,32 @@ curl https://clj-wasm-worker.oddiy.workers.dev
 # Clojure WASM ran on Cloudflare Workers
 ```
 
-It is live.
+It works.
 
-## Measurements
+## Performance
 
-I measured against a plain JS worker returning the same response, using `hey` with 200 requests at 20 concurrency.
+I measured against a plain JS worker returning the same response. Used `hey` with 200 requests at 20 concurrency.
 
-| Metric | JS | Clojure WASM |
-|--------|----|--------------|
+| | JS | Clojure WASM |
+|---|---|---|
 | Bundle (gzip) | 0.21 KB | 2,520 KB |
 | p50 latency | 27ms | 67ms |
 | p90 latency | 82ms | 117ms |
 | p99 latency | 75ms | 349ms |
-| Avg (warm) | 34ms | 85ms |
-| Build time | — | ~14s |
+| Average (warm) | 34ms | 85ms |
 
-The warm p50 is about 2.5× slower. The p99 spike (349ms) is probably the GraalVM WASM runtime booting on a fresh isolate — each time CF Workers spins up a new instance, the Clojure VM has to initialize.
+Warm p50 is about 2.5x slower. The p99 spike at 349ms is probably the GraalVM WASM runtime booting on a new isolate.
 
-Bundle size is the bigger concern. At 2.52MB gzipped the hello-world fits inside the free tier (3MB). Any real application will likely push past it.
+Bundle size is the bigger concern. At 2.52MB gzipped this hello-world fits inside the free tier limit of 3MB. A real application will push past it.
 
-## Is this actually useful?
+## Is this actually useful
 
-Probably not for most use cases. The constraints are real:
+Probably not for most use cases. The WASM sandbox has no filesystem, no threads, no network I/O. The JVM libraries that make Clojure useful on the server do not work here. Ring, http-kit, JDBC, none of it.
 
-- No filesystem, no threads, no network I/O inside the WASM sandbox
-- The JVM libraries that make Clojure productive on the server — Ring, http-kit, JDBC — do not work at the edge
-- Bundle size will grow quickly once you add real code
-- ClojureScript or Squint give you a similar developer experience at a fraction of the size and without the WASM overhead
+The one case where this could make sense: you have pure business logic already written in Clojure, things like validation, calculations, data transformation, and you want to run that same code at the edge without rewriting it. One codebase, two targets.
 
-The one case where it could make sense: **shared pure logic between a JVM backend and the edge**. If you have validation rules, pricing calculations, or document transformation already written in Clojure, you could compile that same namespace to WASM and run it at the edge without rewriting it. One codebase, two deployment targets.
-
-Beyond that, the value is mostly technical curiosity — which is a fine reason on its own.
+Beyond that it is mostly an interesting exploration.
 
 ## What does not work yet
 
-The `-main` function runs but there is no way to call individual Clojure functions from the request handler yet. The GraalVM Web Image API has annotations for exporting functions to JavaScript — that is the next step to explore.
+The `-main` function runs but I cannot call individual Clojure functions from the request handler yet. GraalVM Web Image has annotations for exporting functions to JavaScript. That is the next thing to explore.

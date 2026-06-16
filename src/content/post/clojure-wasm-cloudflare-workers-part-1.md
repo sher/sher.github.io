@@ -1,36 +1,34 @@
 ---
 title: "Clojure on CF Workers via WASM, Part 1: Compiling"
-description: "Can real Clojure (JVM) code run on Cloudflare Workers? Using GraalVM Web Image to compile Clojure to WASM — and it works."
+description: "Can real Clojure (JVM) code run on Cloudflare Workers? Using GraalVM Web Image to compile Clojure to WASM, and it works."
 publishDate: 2026-06-16
 tags: ["clojure", "wasm", "cloudflare-workers"]
 ---
 
-This is part 1 of an exploration into running real Clojure on Cloudflare Workers. Not ClojureScript. Not Squint. Actual Clojure, compiled to WebAssembly.
+I wanted to know if real Clojure can run on Cloudflare Workers. Not ClojureScript. Not Squint. Actual JVM Clojure, compiled to WebAssembly.
 
-## The question
+The short answer is yes.
 
-Cloudflare Workers runs V8 isolates: JavaScript and WASM only. No JVM. ClojureScript compiles Clojure syntax to JavaScript and works fine. But I wanted to know: can you take a real Clojure program — compiled JVM bytecode — and run it on CF Workers?
+## What is the path
 
-The answer turned out to be yes.
+Cloudflare Workers runs V8 isolates. Only JavaScript and WASM are allowed. No JVM.
 
-## Prior art
-
-I searched but could not find a documented example of JVM Clojure running on CF Workers. The closest thing I found:
-
-- [graal-clojure-wasm](https://github.com/roman01la/graal-clojure-wasm) by roman01la — demonstrates Clojure → WASM compilation with GraalVM 25, targeting Node.js. No CF Workers.
-- ClojureScript on CF Workers has examples, but ClojureScript compiles to JavaScript, not WASM.
-- JVM languages on CF Workers in general seem unexplored. Kotlin and Scala users have asked about it but I found no working examples.
-
-If you have seen this done elsewhere, I would like to know.
-
-## The path
-
-GraalVM 25 ships an experimental feature called **Web Image** (`--tool:svm-wasm`). It takes a JVM application and compiles it to WebAssembly using the same AOT pipeline as GraalVM native-image, but targeting WASM instead of a native binary.
+GraalVM 25 has an experimental feature called Web Image. The flag is `--tool:svm-wasm`. It compiles a JVM application to WebAssembly using the same AOT pipeline as native-image, but targeting WASM instead of a native binary.
 
 This is different from:
-- ClojureScript / Squint — compile Clojure syntax to JavaScript
-- Babashka — native binary, no WASM target
-- Chicory — a JVM *in* WASM, not the other way around
+- ClojureScript / Squint - these compile Clojure syntax to JavaScript
+- Babashka - native binary, no WASM target
+- Chicory - a JVM running inside WASM, not the other way
+
+## Did anyone do this before
+
+I searched and did not find a working example of JVM Clojure on CF Workers. The closest thing I found:
+
+- [graal-clojure-wasm](https://github.com/roman01la/graal-clojure-wasm) by roman01la - shows Clojure to WASM compilation working in Node.js. No CF Workers.
+- ClojureScript on CF Workers has examples, but that compiles to JavaScript, not WASM.
+- JVM languages on CF Workers in general seem unexplored. Kotlin and Scala users have asked about it but no working examples.
+
+If you have seen this done somewhere, I would like to know.
 
 ## Toolchain
 
@@ -72,7 +70,7 @@ Build it into an uberjar with AOT compilation:
 clojure -X:uberjar
 ```
 
-## Compiling to WASM
+## Compile to WASM
 
 ```bash
 export GRAALVM_HOME=/Library/Java/JavaVirtualMachines/graalvm-25.jdk/Contents/Home
@@ -85,28 +83,24 @@ native-image --tool:svm-wasm \
   --initialize-at-build-time
 ```
 
-The `--initialize-at-build-time` flag is critical. Without it, Clojure tries to dynamically load `clojure.core` from the classpath at runtime — which does not exist in a WASM sandbox. The flag bakes the entire Clojure runtime into the image at compile time.
+The `--initialize-at-build-time` flag is important. Without it, Clojure tries to load `clojure.core` from the classpath at runtime. There is no classpath in a WASM sandbox. The flag bakes the Clojure runtime into the image at compile time.
 
 Output:
 
 ```
 Build artifacts:
-  target/wasm/app.js       (92KB  — JS glue/runtime)
-  target/wasm/app.js.wasm  (5.3MB — the WASM binary)
-  target/wasm/app.js.wat   (116MB — human-readable text, not deployed)
+  target/wasm/app.js       (92KB  - JS glue)
+  target/wasm/app.js.wasm  (5.3MB - the WASM binary)
+  target/wasm/app.js.wat   (116MB - text format, not deployed)
 ```
 
-Gzipped WASM: **2.44MB**. CF Workers free tier limit is 3MB compressed. We are inside it.
+Gzipped WASM is 2.44MB. CF Workers free tier limit is 3MB. We are inside it, for now.
 
-## Verify locally
+## Run locally
 
 ```bash
 node target/wasm/app.js
 # Hello from Clojure WASM, world!
 ```
 
-It runs. Real Clojure executing inside a WASM runtime in Node.js.
-
-## What's next
-
-Getting this to actually run *in Cloudflare Workers* required two more patches to the GraalVM JS glue — the auto-run at module load, and the WASM loading mechanism. That is Part 2.
+Real Clojure running in WASM. Now we need to get it into CF Workers. That is Part 2.
