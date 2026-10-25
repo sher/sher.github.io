@@ -1,4 +1,4 @@
-@layer theme, base, pagefind, components, utilities;
+@layer theme, base, components, utilities;
 
 @import "tailwindcss/theme.css" layer(theme);
 @import "tailwindcss/preflight.css" layer(base);
@@ -49,7 +49,6 @@
 	initial-value: oklch(55.27% 0.195 19.06);
 }
 
-/* you could refactor below to use light-dark(), depending on your target audience */
 @theme {
 	--color-global-bg: oklch(98.48% 0 0);
 	--color-global-text: oklch(26.99% 0.0096 235.05);
@@ -116,10 +115,7 @@
 }
 
 @layer components {
-	@import "./components/admonition.css";
-	@import "./components/github-card.css";
-
-	.cactus-link {
+	.underline-link {
 		@apply hover:decoration-link underline underline-offset-2 hover:decoration-2;
 	}
 

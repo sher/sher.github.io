@@ -3,22 +3,11 @@ import type { SiteConfig } from "@/types";
 
 export const siteConfig: SiteConfig = {
 	url: "https://sher.github.io",
-	/*
-		- Used to construct the meta title property found in src/components/BaseHead.astro L:11
-		- The webmanifest name found in astro.config.ts L:42
-		- The link value found in src/components/layout/Header.astro L:35
-		- In the footer found in src/components/layout/Footer.astro L:12
-	*/
 	title: "The Cookbook",
-	// Used as both a meta property (src/components/BaseHead.astro L:31 + L:49) & the generated satori png (src/pages/og-image/[slug].png.ts)
 	author: "Sher",
-	// Used as the default description meta property and webmanifest description
 	description: "Notes on software engineering.",
-	// HTML lang property, found in src/layouts/Base.astro L:18 & astro.config.ts L:48
 	lang: "en-GB",
-	// Meta property, found in src/components/BaseHead.astro L:42
 	ogLocale: "en_GB",
-	// Date.prototype.toLocaleDateString() parameters, found in src/utils/date.ts.
 	date: {
 		locale: "en-GB",
 		options: {
@@ -29,7 +18,6 @@ export const siteConfig: SiteConfig = {
 	},
 };
 
-// Used to generate links in both the Header & Footer.
 export const menuLinks: { path: string; title: string }[] = [
 	{
 		path: "/",
@@ -57,7 +45,7 @@ export const expressiveCodeOptions: AstroExpressiveCodeOptions = {
 	},
 	themeCssSelector(theme, { styleVariants }) {
 		// If one dark and one light theme are available
-		// generate theme CSS selectors compatible with cactus-theme dark mode switch
+		// generate theme CSS selectors compatible with the dark mode switch
 		if (styleVariants.length >= 2) {
 			const baseTheme = styleVariants[0]?.theme;
 			const altTheme = styleVariants.find((v) => v.theme.type !== baseTheme?.type)?.theme;

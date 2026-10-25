@@ -1,17 +1,7 @@
 {
 	"$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
 	"files": {
-		"includes": [
-			"**",
-			"!**/build",
-			"!**/dist",
-			"!**/node_modules",
-			"!**/.vercel",
-			"!**/.netlify",
-			"!**/.vscode",
-			"!**/.astro",
-			"!public"
-		]
+		"includes": ["**", "!**/dist", "!**/node_modules", "!**/.astro", "!public"]
 	},
 	"formatter": {
 		"enabled": true,
