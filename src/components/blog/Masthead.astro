@@ -72,7 +72,6 @@ const dateTimeOptions: Intl.DateTimeFormatOptions = {
 			</svg>
 			{data.tags.map((tag, i) => (
 				<>
-					{/* prettier-ignore */}
 					<span class="contents">
 						<a class="cactus-link inline-block before:content-['#']" data-pagefind-filter={`tag:${tag}`} href={`/tags/${tag}/`}><span class="sr-only">View more blogs with the tag&nbsp;</span>{tag}
 						</a>{i < data.tags.length - 1 && ", "}
